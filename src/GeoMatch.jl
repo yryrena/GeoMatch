@@ -209,6 +209,47 @@ function match_spatial(treated::AbstractDataFrame, control::AbstractDataFrame;
                        crs_target::Union{Nothing,String}=nothing,
                        replace::Bool=false,
                        seed::Union{Nothing,Int}=nothing)
+    ## basic input checks 
+    @assert hasproperty(treated, :geometry) "## treated table must have a geometry column"
+    @assert hasproperty(control, :geometry) "## control table must have a geometry column"
+    @assert k >= 1 "## k must be >= 1"
+    @assert !isempty(covars) "## covars must not be empty"
+
+    ## use symbol column names to avoid string/symbol mismatch
+    cols_t = propertynames(treated)
+    cols_c = propertynames(control)
+    @assert all(v -> v in cols_t, covars) "## some covars missing in treated"
+    @assert all(v -> v in cols_c, covars) "## some covars missing in control"
+
+
+    ## method and options checks
+    @assert method in ("geoNN", "kernel") "## unsupported method; use \"geoNN\" or \"kernel\""
+    if method == "kernel"
+        @assert bandwidth !== nothing "## bandwidth is required for kernel matching"
+        @assert bandwidth > 0 "## bandwidth must be positive"
+        @assert k >= 1 "## k must be >= 1 for kernel candidate selection"
+    end
+
+    ## distance metric whitelist
+    @assert distance_metric in (:haversine,) "## distance metric not implemented in mvp"
+
+    ## radius and region checks
+    if radius_km !== nothing
+        @assert radius_km >= 0 "## radius_km must be nonnegative"
+    end
+    if region_col !== nothing
+        @assert Symbol(region_col) in names(treated) "## region_col not found in treated"
+        @assert Symbol(region_col) in names(control) "## region_col not found in control"
+    end
+
+    ## hybrid ps checks 
+    if region_col !== nothing
+        @assert region_col in propertynames(treated) "## region_col not found in treated"
+        @assert region_col in propertynames(control) "## region_col not found in control"
+    end
+    
+
+
 
     ## mvp: haversine only; kernel bandwidth required for kernel method
     rng = seed === nothing ? Random.GLOBAL_RNG : MersenneTwister(seed)
@@ -222,23 +263,11 @@ function match_spatial(treated::AbstractDataFrame, control::AbstractDataFrame;
     pairs = if method == "geoNN"
         _knn_match(D; k=k, replace=replace)
     elseif method == "kernel"
-        bandwidth === nothing && error("bandwidth is required for kernel matching")
         _kernel_match(D; bandwidth=bandwidth, k=k)
     else
         error("method not implemented in mvp")
     end
-
-    if hybrid
-        ps_formula === nothing && error("ps_formula is required for hybrid")
-        ## build combined df to fit ps for control; assume treated has indicator = 1, control = 0
-        df_t = DataFrame(treated[:, covars]); df_t.:treat = 1
-        df_c = DataFrame(control[:, covars]); df_c.:treat = 0
-        df = vcat(df_t, df_c; cols=:union)
-        ps = _estimate_ps(df, ps_formula)
-        ps_t = ps[1:size(df_t,1)]
-        ps_c = ps[(size(df_t,1)+1):end]
-        pairs = _hybrid_refine(pairs, ps_t, ps_c)
-    end
+ 
 
     dropped_t = setdiff(collect(1:size(treated,1)), unique(pairs.t_id))
     dropped_c = setdiff(collect(1:size(control,1)), unique(pairs.c_id))
