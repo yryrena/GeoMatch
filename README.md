@@ -1,6 +1,6 @@
 # GeoMatch.jl
 
-[![ci](https://github.com/yryrena/GeoMatch/actions/workflows/ci.yml/badge.svg)](https://github.com/yryrena/GeoMatch/actions/workflows/ci.yml) 
+[![ci](https://github.com/yryrena/GeoMatch/actions/workflows/ci.yml/badge.svg)](https://github.com/yryrena/GeoMatch/actions/workflows/ci.yml)
 
 Minimal, working proof-of-concept for spatial matching in Julia.
 
@@ -12,12 +12,12 @@ MVP scope: haversine distance, K-nearest neighbors or kernel matching, basic bal
 
 ## Features
 
-- Haversine distance on lon-lat coordinates
-- K-nearest neighbor matching with or without replacement
-- Kernel matching with Gaussian or triangular kernels
-- Optional radius caliper and same-region constraint
-- Simple balance diagnostics (standardized mean differences)
-- Minimal HTML report generator
+- Haversine distance on lon-lat coordinates  
+- K-nearest neighbor matching with or without replacement  
+- Kernel matching with Gaussian or triangular kernels  
+- Optional radius caliper and same-region constraint  
+- Simple balance diagnostics (standardized mean differences)  
+- Minimal HTML report generator  
 
 ------
 
@@ -39,7 +39,7 @@ julia> ]
 (@v1.11) pkg> test GeoMatch
 ```
 
-From GitHub:
+From GitHub: 
 
 ```julia
 julia> ]
@@ -47,9 +47,9 @@ julia> ]
 (@v1.11) pkg> test GeoMatch
 ```
 
-> Recommendation: do not commit `Manifest.toml` for a package repo.
+> Recommendation: do not commit `Manifest.toml` for a package repo. 
 
-------
+---
 
 ## Quick Start
 
@@ -103,7 +103,7 @@ println("report written to geomatch_report.html")
 
 Example output for `res.pairs`:
 
-```markdown
+```text
 6×4 DataFrame
  Row │ t_id   c_id   distance  weight
      │ Int64  Int64  Float64   Float64
@@ -118,6 +118,22 @@ Example output for `res.pairs`:
 
 ------
 
+## Examples
+
+Run the examples (they will write minimal HTML reports locally, which are ignored by git):
+
+```bash
+julia --project=. examples/kernel.jl
+julia --project=. examples/hybrid.jl
+```
+
+- `kernel.jl` shows spatial kernel matching with a Gaussian kernel (`method="kernel"`, `k=5`, `bandwidth=12.0` km).
+- `hybrid.jl` shows geo k-nn with propensity score refinement (`hybrid=true`, `ps_formula=@formula(treat ~ income + pop + urban)`).
+
+Reports are saved as `geomatch_kernel.html` and `geomatch_hybrid.html`.
+
+------
+
 ## API
 
 #### `match_spatial(treated, control; kwargs...) -> MatchResult`
@@ -125,34 +141,34 @@ Example output for `res.pairs`:
 **Inputs**
 
 - `treated::AbstractDataFrame`, `control::AbstractDataFrame`
-  - Must each contain a `geometry` column with `GeometryBasics.Point` values whose `.x` and `.y` represent longitude and latitude (WGS84).
+  Must each contain a `geometry` column with `GeometryBasics.Point` values whose `.x` and `.y` represent longitude and latitude (WGS84).
 - `covars::Vector{Symbol}`
-  Covariates used for balance reporting and, when `hybrid = true`, in the propensity score model.
+   Covariates used for balance reporting and, when `hybrid = true`, in the propensity score model.
 - `method::String = "geoNN"`
   - `"geoNN"`: distance-based KNN matching
   - `"kernel"`: distance-weighted matching using kernels
 - `k::Int = 1`
-  Number of matches per treated unit (for `"kernel"`, k nearest controls are used to compute weights).
+   Number of matches per treated unit (for `"kernel"`, k nearest controls are used to compute weights).
 - `radius_km::Union{Nothing, Float64} = nothing`
-  Maximum allowed distance. Pairs beyond this are discarded.
+   Maximum allowed distance. Pairs beyond this are discarded.
 - `kernel::String = "gaussian"`
-  `"gaussian"` or `"triangular"` (only used with `method = "kernel"`).
+   `"gaussian"` or `"triangular"` (only used with `method = "kernel"`).
 - `bandwidth::Union{Nothing, Float64} = nothing`
-  Required if `method = "kernel"`.
+   Required if `method = "kernel"`.
 - `hybrid::Bool = false`
-  If true, estimate a logit propensity score and sort within treated units by absolute PS gap.
+   If true, estimate a logit propensity score and sort within treated units by absolute PS gap.
 - `ps_formula = nothing`
-  A `StatsModels` formula, e.g. `@formula(treat ~ income + pop)`. Required if `hybrid = true`.
+   A `StatsModels` formula, e.g. `@formula(treat ~ income + pop)`. Required if `hybrid = true`.
 - `region_col::Union{Nothing, Symbol} = nothing`
-  If provided, only match within equal region labels across treated and control.
+   If provided, only match within equal region labels across treated and control.
 - `distance_metric::Symbol = :haversine`
-  Currently only `:haversine` is implemented.
+   Currently only `:haversine` is implemented.
 - `crs_target::Union{Nothing, String} = nothing`
-  Reserved for future CRS handling. Not used in the MVP.
+   Reserved for future CRS handling. Not used in the MVP.
 - `replace::Bool = false`
-  If false, each control unit can be used at most once in KNN.
+   If false, each control unit can be used at most once in KNN.
 - `seed::Union{Nothing, Int} = nothing`
-  Optional RNG seed for reproducibility where randomization is introduced (not used by deterministic KNN).
+   Optional RNG seed for reproducibility where randomization is introduced (not used by deterministic KNN).
 
 **Output: `MatchResult`**
 
@@ -183,20 +199,6 @@ Writes a minimal static HTML file with a summary and the balance table. Returns 
 
 ------
 
-## Examples
-
-See `examples/demo.jl` for a runnable script mirroring the Quick Start.
-
-Run it with:
-
-```
-julia --project=. examples/demo.jl
-```
-
-It will print a preview of matched pairs and write `geomatch_report.html`.
-
-------
-
 ## Tests
 
 A minimal test suite is included:
@@ -214,17 +216,12 @@ The test builds tiny treated/control tables, runs `geoNN` matching, and checks t
 
 ## Design Notes
 
-- Geometry creation: prefer `GeometryBasics.Point(x, y)` for lon-lat points.
-
-  Prior `GeoInterface.point((x, y))` patterns may not work with recent `GeoInterface` versions.
-
+- Geometry creation: prefer `GeometryBasics.Point(x, y)` for lon-lat points. Prior `GeoInterface.point((x, y))` patterns may not work with recent `GeoInterface` versions.
 - Distance: haversine is computed in kilometers on lon-lat. Projections and alternative metrics are not implemented in the MVP.
-
 - Determinism: KNN matching is deterministic given a fixed dataset and constraints. Kernel matching uses deterministic weights for the k nearest valid controls.
-
 - Performance: the MVP computes a dense distance matrix. For large `n` and `m`, consider tiling or approximate neighbors in future versions.
 
-------
+---
 
 ## Roadmap
 
@@ -233,19 +230,3 @@ The test builds tiny treated/control tables, runs `geoNN` matching, and checks t
 - Ratio matching and optimal pair assignment
 - Richer diagnostics and plots
 - Benchmarks and large-n strategies
-
-
-## quickstart
-```bash
-julia --project=. -e 'import Pkg; Pkg.instantiate()'
-julia --project=. examples/demo.jl
-julia --project=. -e 'using Pkg; Pkg.test()'
-
-
-## quickstart
-```bash
-julia --project=. -e 'import Pkg; Pkg.instantiate()'
-julia --project=. examples/demo.jl
-julia --project=. -e 'using Pkg; Pkg.test()'
-
-```
