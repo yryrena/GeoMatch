@@ -246,3 +246,4 @@ julia --project=. -e 'import Pkg; Pkg.instantiate()'
 julia --project=. examples/demo.jl
 julia --project=. -e 'using Pkg; Pkg.test()'
 
+```
