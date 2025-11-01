@@ -1,0 +1,33 @@
+name = "GeoMatch"
+uuid = "d2a6a3c1-9f0c-4b36-9c2e-6e8a0f3f5d50"
+authors = ["you <you@example.com>"]
+version = "0.1.0"
+
+[deps]
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
+GLM = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
+GeoInterface = "cf35fbd7-0cd7-5166-be24-54bfbe79505f"
+GeometryBasics = "5c1252a2-5f33-56bf-86c9-59e7332b4326"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+StatsModels = "3eaba693-59b7-5ba5-a881-562e759f1c8d"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[compat]
+DataFrames = "1"
+Distances = "0.10"
+GLM = "1"
+GeoInterface = "1"
+GeometryBasics = "0.5.10"
+LinearAlgebra = "1.11.0"
+NearestNeighbors = "0.4"
+Random = "1.11.0"
+Statistics = "1.11.1"
+StatsBase = "0.34"
+StatsModels = "0.7"
+Test = "1.11.0"
+julia = "1.11"

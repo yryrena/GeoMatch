@@ -1,0 +1,8 @@
+## julia artifacts
+Manifest.toml
+*.jl.*.cov
+*.jl.mem
+
+## outputs
+geomatch_report.htmlManifest.toml
+Manifest.toml
