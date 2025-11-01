@@ -2,12 +2,12 @@
 ## comments use lowercase and start with ##
 using Test
 using GeoMatch
-using DataFrames, GeoInterface
-using GeometryBasics
+using DataFrames, GeoInterface, GeometryBasics
 
 @testset "geomatch mvp" begin
-    t = DataFrame(id=1:2, x=[0.0, 0.1], y=[0.0, 0.1], a=[1.0, 2.0])
+    t = DataFrame(id=1:2, x=[0.0, 0.1], y=[0.0, 0.1], a=[1.0,2.0])
     t.geometry = [GeometryBasics.Point(t.x[i], t.y[i]) for i in 1:nrow(t)]
+
     c = DataFrame(id=101:104, x=rand(4), y=rand(4), a=rand(4))
     c.geometry = [GeometryBasics.Point(c.x[i], c.y[i]) for i in 1:nrow(c)]
 
