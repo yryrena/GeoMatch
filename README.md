@@ -118,7 +118,7 @@ Example output for `res.pairs`:
 
 ## API
 
-### `match_spatial(treated, control; kwargs...) -> MatchResult`
+#### `match_spatial(treated, control; kwargs...) -> MatchResult`
 
 **Inputs**
 
@@ -166,7 +166,7 @@ Example output for `res.pairs`:
 
 ------
 
-### `balance_table(res, treated, control, covars) -> DataFrame`
+#### `balance_table(res, treated, control, covars) -> DataFrame`
 
 Returns a table with standardized mean differences before and after matching:
 
@@ -175,7 +175,7 @@ Returns a table with standardized mean differences before and after matching:
 
 ------
 
-### `html_report(path, res, balance) -> String`
+#### `html_report(path, res, balance) -> String`
 
 Writes a minimal static HTML file with a summary and the balance table. Returns the written `path`.
 
