@@ -232,3 +232,17 @@ The test builds tiny treated/control tables, runs `geoNN` matching, and checks t
 - Richer diagnostics and plots
 - Benchmarks and large-n strategies
 
+
+## quickstart
+```bash
+julia --project=. -e 'import Pkg; Pkg.instantiate()'
+julia --project=. examples/demo.jl
+julia --project=. -e 'using Pkg; Pkg.test()'
+
+
+## quickstart
+```bash
+julia --project=. -e 'import Pkg; Pkg.instantiate()'
+julia --project=. examples/demo.jl
+julia --project=. -e 'using Pkg; Pkg.test()'
+
