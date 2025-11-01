@@ -2,9 +2,13 @@
 Manifest.toml
 *.jl.*.cov
 *.jl.mem
+*.html
+*.ipynb_checkpoints
+
 
 ## outputs
 geomatch_report.htmlManifest.toml
 Manifest.toml
 geomatch_report.html
 geomatch_report.html
+
