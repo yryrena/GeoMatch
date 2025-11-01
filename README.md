@@ -1,3 +1,5 @@
+# GeoMatch.jl
+
 Minimal, working proof-of-concept for spatial matching in Julia.
 
 Given a **treated** table and a **control** table with point geometries (WGS84 lon-lat), GeoMatch builds matched pairs or weighted sets based on great-circle distance, with optional covariate balancing diagnostics.
