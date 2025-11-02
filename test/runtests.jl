@@ -19,7 +19,7 @@ using DataFrames, GeoInterface, GeometryBasics
         k = 1,
         radius_km = 5000.0,
     )
-    @test nrow(res.pairs) ≥ 2
+    @test nrow(res.pairs) == 2
 
     bt = GeoMatch.balance_table(res, t, c, [:a])
     @test all(ismissing.(bt.smd_before) .== false)
