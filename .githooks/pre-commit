@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Reject non-ASCII in non-binary staged files
+fail=0
+while IFS= read -r -d '' f; do
+  # skip binary files
+  if file -I "$f" | grep -vq 'charset=binary'; then
+    # grep for any byte outside ASCII printable range
+    if LC_ALL=C grep -n "[^ -~]" "$f" >/dev/null; then
+      echo "Non-ASCII found in: $f"
+      fail=1
+    fi
+  fi
+done < <(git diff --cached --name-only -z)
+[ $fail -eq 0 ] || { echo "Commit blocked: strip smart quotes / NBSP etc."; exit 1; }
