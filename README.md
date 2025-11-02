@@ -128,7 +128,7 @@ julia --project=. examples/hybrid.jl
 ```
 
 - `kernel.jl` shows spatial kernel matching with a Gaussian kernel (`method="kernel"`, `k=5`, `bandwidth=12.0` km).
-- `hybrid.jl` shows geo k-nn with propensity score refinement (`hybrid=true`, `ps_formula=@formula(treat ~ income + pop + urban)`).
+- `hybrid.jl` shows geo K-NN with propensity-score refinement (`hybrid=true`, `ps_formula=@formula(treat ~ income + pop + urban)`).
 
 Reports are saved as `geomatch_kernel.html` and `geomatch_hybrid.html`.
 
