@@ -12,3 +12,5 @@ Manifest.toml
 geomatch_report.html
 geomatch_report.html
 
+# temp files
+tmp/

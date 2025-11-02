@@ -1,0 +1,33 @@
+## top-level editorconfig for geomatch
+root = true
+
+## default rules for all files
+[*]
+end_of_line = lf
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+## julia sources
+[*.jl]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+## yaml (github actions etc.)
+[*.yml]
+indent_style = space
+indent_size = 2
+
+## markdown: keep trailing spaces for hard line breaks
+[*.md]
+trim_trailing_whitespace = false
+
+## shell scripts
+[*.sh]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+insert_final_newline = true
