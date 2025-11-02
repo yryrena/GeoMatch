@@ -104,24 +104,17 @@ println("report written to geomatch_report.html")
 Example output for `res.pairs`:
 
 ```text
-6×4 DataFrame
- Row │ t_id   c_id   distance  weight
-     │ Int64  Int64  Float64   Float64
-─────┼─────────────────────────────────
-   1 │     1     16   6.88871      1.0
-   2 │     1     19  11.7673       1.0
-   3 │     2     10   8.28476      1.0
-   4 │     2     22   8.51346      1.0
-   5 │     3     26   5.95047      1.0
-   6 │     3      7   8.30584      1.0
+6x4 DataFrame
+ Row | t_id  c_id  distance  weight
+     | Int64 Int64 Float64   Float64
+-----+-------------------------------
+   1 |     1    16   6.88871     1.0
+   2 |     1    19  11.76730     1.0
+   3 |     2    10   8.28476     1.0
+   4 |     2    22   8.51346     1.0
+   5 |     3    26   5.95047     1.0
+   6 |     3     7   8.30584     1.0
 ```
-
-------
-
-## Examples
-
-Run the examples (they will write minimal HTML reports locally, which are ignored by git):
-
 ```bash
 julia --project=. examples/kernel.jl
 julia --project=. examples/hybrid.jl
