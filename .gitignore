@@ -16,3 +16,14 @@ geomatch_report.html
 tmp/
 .DS_Store
 .github/.DS_Store
+Manifest.toml
+
+# run artifacts
+pairs.csv
+balance_loveplot.png
+data/*.csv
+scratch/
+
+# macOS
+.DS_Store
+examples/.DS_Store

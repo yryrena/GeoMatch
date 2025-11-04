@@ -1,3 +1,4 @@
+## src/GeoMatch.jl
 module GeoMatch
 
 using GeoInterface
@@ -443,4 +444,13 @@ function html_report(path::AbstractString, res::MatchResult, balance::DataFrame)
     return path
 end
 
-end # module
+include("loveplot.jl")
+using .LovePlot: love_plot
+export love_plot
+
+ 
+
+end  ## module
+
+ 
+
