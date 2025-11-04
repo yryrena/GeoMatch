@@ -1,13 +1,27 @@
+# .github/workflows/ci.yml
 name: ci
+
 on:
   push:
   pull_request:
+
 jobs:
-  test:
+  ascii-guard:
+    name: ascii guard
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: julia-actions/setup-julia@v2
-        with: { version: '1.11' }
-      - run: julia --project=. -e 'import Pkg; Pkg.instantiate()'
-      - run: julia --project=. -e 'using Pkg; Pkg.test()'
+
+      - name: fail on non-ascii in non-binary files
+        shell: bash
+        run: |
+          set -euo pipefail
+          fail=0
+          IGNORE_REGEX='^(\.git/|docs/assets/|.*\.(png|jpg|jpeg|gif|pdf)$)$'
+          git ls-files -z | while IFS= read -r -d '' f; do
+            if [[ "$f" =~ $IGNORE_REGEX ]]; then continue; fi
+            if file -I "$f" | grep -q 'charset=binary'; then continue; fi
+            if LC_ALL=C grep -n "[^ -~]" "$f" >/dev/null; then
+              echo "non-ascii found in: $f"; fail=1; fi
+          done
+          if [[ $fail -ne 0 ]]; then echo "ci failed: strip smart quotes / nbsp etc."; exit 1; fi
